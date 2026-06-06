@@ -1,48 +1,47 @@
 import random
-import sys
-from turtle import Turtle,Screen
-is_race_on="False"
-a=Turtle("turtle")
-a.color("purple")
-b=Turtle("turtle")
-b.color("red")
-c=Turtle("turtle")
-c.color("blue")
-d=Turtle("turtle")
-d.color("yellow")
-screen=Screen()
-screen.setup(500,400)
-a.penup()
-user_bet=screen.textinput(title="make your bet",prompt="which turtle will win the race?")
-a.goto(-225,-165)
-b.penup()
-b.goto(-225,-125)
-c.penup()
-c.goto(-225,-85)
-d.penup()
-d.goto(-225,-45)
-if user_bet:
-    is_race_on=True
+from turtle import Turtle, Screen
+
+screen = Screen()
+screen.setup(width=500, height=400)
+
+user_bet = screen.textinput(
+    title="Make your bet",
+    prompt="Which turtle will win the race? (purple, red, blue, yellow)"
+)
+
+colors = ["purple", "red", "blue", "yellow"]
+y_positions = [-165, -125, -85, -45]
+
+turtles = []
+
+# Create turtles using a loop
+for i in range(len(colors)):
+    turtle = Turtle("turtle")
+    turtle.color(colors[i])
+    turtle.penup()
+    turtle.goto(-225, y_positions[i])
+    turtles.append(turtle)
+
+is_race_on = user_bet is not None
+
 while is_race_on:
-    if a.xcor()>230 or b.xcor()>230 or c.xcor()>230 or d.xcor()>230:
-        turtles=[a,b,c,d]
-        winner = max(turtles, key=lambda t: t.xcor())
-        winner_color = winner.pencolor()
 
-        if winner_color == user_bet.lower():
-            print("You won!")
-        else:
-            print(f"You lost! The winner was {winner_color}.")
-        is_race_on=False
+    for turtle in turtles:
 
-    random_distance=random.randint(0,10)
-    a.forward(random_distance)
-    random_distance = random.randint(0, 10)
-    b.forward(random_distance)
-    random_distance = random.randint(0, 10)
-    c.forward(random_distance)
-    random_distance = random.randint(0, 10)
-    d.forward(random_distance)
+        # Check if current turtle has crossed finish line
+        if turtle.xcor() > 230:
+            winner_color = turtle.pencolor()
 
+            if winner_color.lower() == user_bet.lower():
+                print(f"You won! The {winner_color} turtle is the winner.")
+            else:
+                print(f"You lost! The {winner_color} turtle won.")
 
+            is_race_on = False
+            break
+
+        random_distance = random.randint(0, 10)
+        turtle.forward(random_distance)
+
+screen.exitonclick()
 screen.exitonclick()
